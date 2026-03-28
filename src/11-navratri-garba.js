@@ -10,7 +10,7 @@
  *
  * DOM Structure expected:
  *   <div id="stage">
- *     <div id="dancer1" class="dancer">Priya</div>
+ *     <div id="dancer1" class="dancer">Priya</div> 
  *     <div id="dancer2" class="dancer">Meera</div>
  *     <div id="dancer3" class="dancer">Kavya</div>
  *   </div>
@@ -88,26 +88,53 @@
  *   const formationClone = duplicateFormation(stage);
  *   // => deep clone of stage with id "stage-clone"
  */
+
 export function insertDancer(stage, newDancer, referenceDancer) {
-  // Your code here
+  if (!stage || !newDancer) return false;
+  if (referenceDancer && stage.contains(referenceDancer)) {
+    stage.insertBefore(newDancer, referenceDancer);
+  } else {
+    stage.appendChild(newDancer);
+  }
+  return true;
 }
 
 export function cloneDancer(dancer, deep) {
-  // Your code here
+  if (!dancer) return null;
+  const clone = dancer.cloneNode(deep);
+  if (clone.id) clone.id = clone.id + "-copy";
+  return clone;
 }
 
 export function replaceDancer(stage, oldDancer, newDancer) {
-  // Your code here
+  if (!stage || !oldDancer || !newDancer) return null;
+  if (!stage.contains(oldDancer)) return null;
+  return stage.replaceChild(newDancer, oldDancer);
 }
 
 export function removeDancer(stage, dancer) {
-  // Your code here
+  if (!stage || !dancer) return null;
+  if (!stage.contains(dancer)) return null;
+  return stage.removeChild(dancer);
 }
 
 export function rearrangeStage(stage, order) {
-  // Your code here
+  if (!stage || !Array.isArray(order)) return false;
+  const children = Array.from(stage.children);
+  if (order.length !== children.length) return false;
+  for (const idx of order) {
+    if (typeof idx !== "number" || idx < 0 || idx >= children.length) return false;
+  }
+  // Remove all children first
+  children.forEach(child => stage.removeChild(child));
+  // Append in new order
+  order.forEach(idx => stage.appendChild(children[idx]));
+  return true;
 }
 
 export function duplicateFormation(stage) {
-  // Your code here
+  if (!stage) return null;
+  const clone = stage.cloneNode(true);
+  if (clone.id) clone.id = clone.id + "-clone";
+  return clone;
 }
